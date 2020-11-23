@@ -1,0 +1,274 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+<header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="{{ path_for('home') }}">Practice Problem</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="{{ path_for('home') }}">Home</a>
+              <a class="nav-item nav-link" href="{{ path_for('tag') }}">Problems by tags</a>
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav navbar-right">
+             {% if username == '0' %}
+                <a class="nav-item nav-link" href="{{ base_url() }}/login">Login</a>
+                <a class="nav-item nav-link" href="{{ base_url() }}/register">Register</a>
+              {% else %}
+                <a class="nav-item nav-link" href="#">{{ username }}</a>
+                <form id="myform" method="post" action="{{ path_for('logout') }}"></form>
+
+                <a class="nav-item nav-link" onclick="document.getElementById('myform').submit();">Logout</a>
+              {% endif %}  
+                  
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="main-body">
+<div style="overflow-x: auto;"><br>
+
+  <br>              <div class = "srbar">
+                    <div class="col-md-2">
+
+                     </div>
+                     <div class="col-md-8"> 
+                    <div class="search-box-left">     
+                    <div class="form-group">
+                        <label>Enter Multiple Tags Name</label>
+                        <div class="input-group">
+                            <input type="text" id="search_data" placeholder="" autocomplete="off" class="form-control input-lg" />
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary btn-lg" id="search">Search</button>
+                            </div>
+                        </div>
+                 </div>
+               </div>
+
+               <br><br><br><br>
+    <div id="sort_buttons" class="div-wrapper" >
+    <div class="sort-box selectionOff" style="float:left;">
+        <a id="author_filter" class="sort-box-inner" style="padding-right: 10px;" state="none" onClick = "auth()">
+            Authors
+        </a>
+        <a id="tags_filter" class="sort-box-inner" style="padding-right: 10px;" state="none" onClick = "tags()">
+            Tags
+        </a>
+        {% if username != '0' %}
+           <a id="tags_filter" class="sort-box-inner" style="padding-right: 10px;" state="none" onClick = "mytags()">
+            My Tags
+          </a>
+        {% endif %}  
+    </div>    
+  </div>     
+               
+
+</div>
+
+</div>
+
+<div id ="op" class ="col-md-8" onClick = "original()">
+<table align="center">
+  {% set count = 0 %}
+{% if username != '0' %}
+    {% for k in u_tags %}
+    {% if count%5==0 %}
+      </tr><tr>
+    {% endif %}
+    <td>
+      <div class="problem-tagbox">
+        <div class="problem-tagbox-top"> 
+            <a href="{{ base_url() }}/tags/{{ k[3] }}">   
+                  <div class="problem-tag user"> 
+                              {{ k[3] }}                
+                  </div>          
+            </a>             
+            {% for c in cnt %}
+              {% if c[1]==k[3] %}
+                <div class="problem-tag-number">x&nbsp;{{ c[2] }}</div>
+              {% endif %}
+             {% endfor %}   
+          </div>
+      </div>   
+    </td>
+    {% set count = count+1 %}
+  {% endfor %}
+{% endif %}  
+
+  {% for k in key %}
+    {% if count%5==0 %}
+      </tr><tr>
+    {% endif %}
+    <td>
+      <div class="problem-tagbox">
+        <div class="problem-tagbox-top"> 
+            <a href="{{ base_url() }}/tags/{{ k[0] }}">  
+              {% if k[1]=="actual_tag" %}  
+                  <div class="problem-tag actual_tag"> 
+                              {{ k[0] }}                
+                  </div>
+                {% else %}
+                  <div class="problem-tag author"> 
+                              {{ k[0] }}                
+                  </div>   
+                {% endif %}          
+            </a>             
+            <div class="problem-tag-number">x&nbsp;{{ k[2] }}</div> 
+          </div>
+      </div>   
+    </td>
+    {% set count = count+1 %}
+  {% endfor %}
+</table>  
+</div>
+</div>  
+</div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+<script>
+  $(document).ready(function(){
+      
+    $('#search_data').tokenfield({
+        autocomplete :{
+            source: function(request, response)
+            {
+                jQuery.get('fetch.php', {
+                    query : request.term
+                }, function(data){
+                    data = JSON.parse(data);
+                    response(data);
+                });
+            },
+            delay: 100
+        }
+    });
+
+    $('#search').click(function(){
+        /*$('#country_name').text($('#search_data').val());*/
+        var x =$('#search_data').val();
+        console.log(x);
+        window.location.href="{{ base_url() }}/tags/"+x;
+    });
+
+  });
+</script>
+<script>
+let old = document.getElementById("op").innerHTML;
+
+ function auth(){
+ let x= {{ auth|length }};
+
+ console.log(x);
+ opt = "<table align=\"center\">";
+ {% set count = 0 %}
+ {% for k in auth %}
+    {% if count%5==0 %}
+      opt+="</tr><tr>";
+    {% endif %}
+    opt+= "<td><div class=\"problem-tagbox\"><div class=\"problem-tagbox-top\">"; 
+    opt+= "<a href=\"{{ base_url() }}/tags/{{ k[0] }}\">"  ;
+    opt+="<div class=\"problem-tag author\">{{ k[0] }}</div></a>";  
+    opt+="<div class=\"problem-tag-number\">x&nbsp;{{ k[2] }}</div></div></div></td>"
+    {% set count = count+1 %}
+ {% endfor %}
+  opt+="</table>";
+  document.getElementById("op").innerHTML = opt;
+
+   
+ }
+
+
+ function tags(){
+ opt = "<table align=\"center\">";
+ {% set count = 0 %}
+ {% for k in atag %}
+    {% if count%5==0 %}
+      opt+="</tr><tr>";
+    {% endif %}
+    opt+= "<td><div class=\"problem-tagbox\"><div class=\"problem-tagbox-top\">"; 
+    opt+= "<a href=\"{{ base_url() }}/tags/{{ k[0] }}\">"  ;
+    opt+="<div class=\"problem-tag actual_tag\">{{ k[0] }}</div></a>";  
+    opt+="<div class=\"problem-tag-number\">x&nbsp;{{ k[2] }}</div></div></div></td>"
+    {% set count = count+1 %}
+ {% endfor %}
+  opt+="</table>";
+  document.getElementById("op").innerHTML = opt;
+
+
+ }
+function mytags(){
+opt = "<table align=\"center\">";
+ {% set count = 0 %}
+ {% for k in u_tags %}
+    {% if count%5==0 %}
+      opt+="</tr><tr>";
+    {% endif %}
+    opt+= "<td><div class=\"problem-tagbox\"><div class=\"problem-tagbox-top\">"; 
+    opt+= "<a href=\"{{ base_url() }}/tags/{{ k[3] }}\">"  ;
+    opt+="<div class=\"problem-tag user\">{{ k[3] }}</div></a>";
+    {% for c in cnt %}
+              {% if c[1]==k[3] %}
+                opt+="<div class=\"problem-tag-number\">x&nbsp;{{ c[2] }}</div></div></div></td>"
+              {% endif %}
+    {% endfor %}  
+    
+    {% set count = count+1 %}
+ {% endfor %}
+  opt+="</table>";
+  document.getElementById("op").innerHTML = opt;  
+
+
+
+}
+
+ function original(){
+   opt = "<table align=\"center\">";
+ {% set count = 0 %}
+ {% for k in u_tags %}
+    {% if count%5==0 %}
+      opt+="</tr><tr>";
+    {% endif %}
+    opt+= "<td><div class=\"problem-tagbox\"><div class=\"problem-tagbox-top\">"; 
+    opt+= "<a href=\"{{ base_url() }}/tags/{{ k[3] }}\">"  ;
+    opt+="<div class=\"problem-tag user\">{{ k[3] }}</div></a>";
+    {% for c in cnt %}
+              {% if c[1]==k[3] %}
+                opt+="<div class=\"problem-tag-number\">x&nbsp;{{ c[2] }}</div></div></div></td>"
+              {% endif %}
+    {% endfor %}  
+    
+    {% set count = count+1 %}
+ {% endfor %}
+
+ {% for k in key %}
+    {% if count%5==0 %}
+      opt+="</tr><tr>";
+    {% endif %}
+    opt+= "<td><div class=\"problem-tagbox\"><div class=\"problem-tagbox-top\">"; 
+    opt+= "<a href=\"{{ base_url() }}/tags/{{ k[0] }}\">"  ;
+    {% if k[1]=="actual_tag" %}  
+      opt+="<div class=\"problem-tag actual_tag\">{{ k[0] }}</div></a>";             
+    {% else %}
+      opt+="<div class=\"problem-tag author\">{{ k[0] }}</div></a>";  
+    {% endif %}   
+    opt+="<div class=\"problem-tag-number\">x&nbsp;{{ k[2] }}</div></div></div></td>"
+    {% set count = count+1 %}
+ {% endfor %}
+  opt+="</table>";
+  document.getElementById("op").innerHTML = opt; }
+</script>
+
+
+
+{% endblock content %}
+
+
+ 

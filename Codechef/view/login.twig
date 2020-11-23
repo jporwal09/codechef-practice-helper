@@ -1,0 +1,56 @@
+{% extends 'base.twig' %}
+{% block content %}
+<header class="site-header">
+   <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+      <div class="container">
+         <a class="navbar-brand mr-4" href="{{ path_for('home') }}">Practice Problem</a>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+               <a class="nav-item nav-link" href="{{ path_for('home') }}">Home</a>
+               <a class="nav-item nav-link" href="{{ path_for('tag') }}">Problems by tags</a>
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav navbar-right">
+               {% if username == '0' %}
+                <a class="nav-item nav-link" href="{{ base_url() }}/login">Login</a>
+                <a class="nav-item nav-link" href="{{ base_url() }}/register">Register</a>
+               {% else %}
+                <a class="nav-item nav-link" href="#">{{ username }}</a>
+                <form id="myform" method="post" action="{{ path_for('logout') }}"></form>
+                <a class="nav-item nav-link" onclick="document.getElementById('myform').submit();">Logout</a>
+               {% endif %}  
+            </div>
+         </div>
+      </div>
+   </nav>
+</header>
+<div class="main-body">
+   <div class="form">
+      <form class="login-form" method = "post" action ="{{ path_for('login') }}" onsubmit="return validateform()">
+         <p class="message"> {{ msg }} </p>
+         <input type="text" placeholder="Username" name = "login-username" required/>
+         <input type="password" placeholder="Password" name = "login-pwd" required/>
+         <button type = "submit" id="login-btn">login</button>
+         <p class="message">Not registered? <a href="{{ base_url() }}/register">Create an account</a></p>
+      </form>
+   </div>
+</div>
+</div>
+<script>  
+   function validateform(){  
+   var name=document.login-form.login-username.value;  
+   var password=document.login-form.login-pwd.value;  
+     console.log(name);
+   if (name==null || name==""){  
+     alert("Name can't be blank");  
+     return false;  
+   }else if(password.length<6){  
+     alert("Password must be at least 6 characters long.");  
+     return false;  
+     }  
+   }  
+</script>
+{% endblock content %}  

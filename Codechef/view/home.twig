@@ -1,0 +1,63 @@
+{% extends 'base.twig' %}
+{% block content %}
+<header class="site-header">
+   <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+      <div class="container">
+         <a class="navbar-brand mr-4" href="{{ path_for('home') }}">Practice Problem</a>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+               <a class="nav-item nav-link" href="{{ path_for('home') }}">Home</a>
+               <a class="nav-item nav-link" href="{{ path_for('tag') }}">Problems by tags</a>
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav navbar-right">
+               {% if username == '0' %}
+                <a class="nav-item nav-link" href="{{ base_url() }}/login">Login</a>
+                <a class="nav-item nav-link" href="{{ base_url() }}/register">Register</a>
+               {% else %}
+                <a class="nav-item nav-link" href="#">{{ username }}</a>
+                <form id="myform" method="post" action="{{ path_for('logout') }}"></form>
+                <a class="nav-item nav-link" onclick="document.getElementById('myform').submit();">Logout</a>
+               {% endif %}  
+            </div>
+         </div>
+      </div>
+   </nav>
+</header>
+<div class="main-body">
+   {% if username == '0' %}
+    {% set login =1 %}
+    {% else %}
+    <h3 style = "color:green">Welcome, {{ username }}!</h3>
+     {% set login = 0 %}
+   {% endif %}	
+   <h1 style = "color:#fa1616">About us :</h1>
+    <p style= "font-size:20px; color: black" >
+    This website will help you search for problems on CodeChef based on their tags. You can also find problem set by you favorite authors, of varying difficulty levels, of a particular topic and a lot more.In there is beautiful categorization of probelms with a searchbar for autocomplition of tags , whereas user can select multiple tags.<br>
+    A logged-in user can create his own tags and add them to problems. Those user-defined tags should be private to each user. User can see tags created by hin in my tags button  & also in auto-complete search bar. 
+
+    </p>
+
+    <h1 style = "color:#fa1616" >Purpose:</h1>
+    <p style= "font-size:20px; color:black">
+      This Site is devloped for the <span>CodeChef Internship Assessment 2021 - Round 2  </span> </br>
+      <h3>Problem :- Codechef Practice Page</h3>
+      <h3 >Problem Code :- CCHP01</h3>
+    </p>
+
+    <h1 style = "color:#fa1616" >Devloped By:</h1>
+    <p style= "font-size:20px;color:black">
+      <h3 style = "color:blue">Jayesh Porwal (@jporwal09)</h3>
+      <h3 >Institute of Engineering & Technology ,DAVV</h3>
+      <span style= "font-size:20px">Codechef Profile <a href="https://www.codechef.com/users/jporwal09">jporwal09</a></span>
+      </br>
+      <span style= "font-size:20px">Github Profile <a href="https://github.com/jporwal09">jporwal09</a></span>
+      </br>
+
+    </p>
+
+</div>
+{% endblock content %}

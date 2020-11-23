@@ -1,0 +1,44 @@
+{% extends 'base.twig' %}
+{% block content %}
+<header class="site-header">
+   <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+      <div class="container">
+         <a class="navbar-brand mr-4" href="{{ path_for('home') }}">Practice Problem</a>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+               <a class="nav-item nav-link" href="{{ path_for('home') }}">Home</a>
+               <a class="nav-item nav-link" href="{{ path_for('tag') }}">Problems by tags</a>
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav navbar-right">
+               {% if username == '0' %}
+                <a class="nav-item nav-link" href="{{ base_url() }}/login">Login</a>
+                <a class="nav-item nav-link" href="{{ base_url() }}/register">Register</a>
+               {% else %}
+                <a class="nav-item nav-link" href="#">{{ username }}</a>
+                <form id="myform" method="post" action="{{ path_for('logout') }}"></form>
+                <a class="nav-item nav-link" onclick="document.getElementById('myform').submit();">Logout</a>
+               {% endif %}  
+            </div>
+         </div>
+      </div>
+   </nav>
+</header>
+<div class="main-body">
+   <div class="login-page">
+      <div class="form">
+         <form class="register-form" method = "post" action="{{ path_for('register') }}">
+            <input type="text" name ="reg-username" placeholder="Username"/>
+            <input type="text" name ="reg-name" placeholder="Name"/>
+            <input type="password" name = "reg-pwd" placeholder="Password"/>
+            <input type="text" name="reg-email" placeholder="Email address"/>
+            <button type ="submit">Register</button>
+            <p class="message">Already registered? <a href="{{ base_url() }}/login">Sign In</a></p>
+         </form>
+      </div>
+   </div>
+</div>
+{% endblock content %}
